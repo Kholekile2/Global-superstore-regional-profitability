@@ -1,7 +1,8 @@
 # Global Superstore: Regional Profitability Analysis
 
-**Tools:** Microsoft Excel — XLOOKUP, PivotTables, calculated fields, filtering and sorting
-**Dataset:** Global Superstore — ~51,000 order line items across 13 global regions, 2011 to 2014
+Tools: Microsoft Excel, using XLOOKUP, PivotTables, calculated fields, and filtering and sorting.
+
+Dataset: Global Superstore, with around 51,000 order line items across 13 global regions covering 2011 to 2014.
 
 ---
 
@@ -24,8 +25,6 @@ Sales were growing, but profit was not keeping pace. The guiding question:
 ## Dashboard
 
 ![Global Superstore Regional Profitability Dashboard](dashboard.png)
-
-*(Replace `dashboard.png` with your exported dashboard image file name.)*
 
 ---
 
