@@ -1,90 +1,68 @@
 # Global Superstore: Regional Profitability Analysis
 
-**Tools:** Microsoft Excel, using XLOOKUP, PivotTables, calculated fields, and filtering and sorting.
+**Tool:** Microsoft Excel (XLOOKUP, PivotTables, calculated fields, data validation, data mapping)  
+**Dataset:** Global Superstore, around 51,000 order records across 13 regions, 2011 to 2014
 
-**Dataset:** Global Superstore, with around 51,000 order line items across 13 global regions covering 2011 to 2014.
+## The question
 
----
+Sales were growing but profit wasn't keeping up. So the question I set out to answer was simple to ask and less simple to answer: where across the 13 regions is the business actually losing money, and what is driving it?
 
-## Brief
+The reason that matters is that a business can look fine in total while quietly losing money underneath. The overall margin here sat at a few percent, which on its own looks unremarkable. But an average like that hides as much as it shows, because it blends the strong regions and the failing ones together. The job was to pull them apart and find out which was which, and then work out the cause honestly instead of blaming the first thing that lined up with the losses.
 
-Global Superstore is a global online retailer with a broad product catalogue spanning office supplies, furniture, and technology, selling to customers across many countries. Like any retailer, it wants sales that actually convert into profit. This project takes the role of an analyst asked to find where the business loses money, and why, and to test that explanation rather than stop at the first pattern.
+## What I found
 
-## Objective
+About a quarter of all sales were unprofitable, and the losses were not spread evenly across the business.
 
-Sales were growing, but profit was not keeping pace. The guiding question:
-
-**Where does Global Superstore lose money across its regions, and what is actually driving those losses?**
-
-## The headline finding
-
-**Three regions lose money on the average sale, and heavy discounting is the factor most strongly linked to those losses, not sales volume or shipping.**
-
----
+- The losses sat in three regions. Africa, EMEA, and Southeast Asia were running negative average margins, while the other ten regions stayed profitable. The business only looked healthy overall because the profitable regions were covering for the rest.
+- Discounting was the factor most closely tied to the losses. The three loss making regions were discounting between 16 and 27 percent, while Canada, the healthiest region, discounted nothing and held the best margin. Across all the regions, the deeper the discount, the worse the margin.
+- Shipping was not the cause. Before settling on discounting I wanted to check whether shipping was really behind it, so I tested both shipping cost and shipping delay. Neither lined up with the losses. Africa and EMEA actually had the lowest shipping costs in the company and were still losing money, which pointed back to discounting.
+- Southeast Asia was a different shape from the other two. Most of the region was profitable. The damage came from a few heavily discounted categories (Tables, Accessories, Supplies, Fasteners) that were dragging the whole region into the red. So the fix there is targeted at those categories rather than applied to the whole region.
 
 ## Dashboard
 
 ![Global Superstore Regional Profitability Dashboard](dashboard.png)
 
----
+The dashboard is built as one argument rather than a pile of charts. The first chart shows where the problem is, the second shows the cause, the third shows what it is not (shipping), and the fourth shows where inside Southeast Asia to actually act.
 
-## Key insights and recommendations
+## Recommendations
 
-**1. Losses are concentrated in three regions, not spread across the business.**
-Africa, EMEA, and Southeast Asia run negative average profit margins, while the other ten regions stay profitable. The business stays positive overall only because the healthy regions absorb these losses.
-*Recommendation: treat these three regions as the priority for pricing and discount review.*
+- Treat the three loss making regions as the priority for a pricing and discount review.
+- Cap discounts in those regions for a quarter and measure whether margins recover before making it permanent.
+- In Southeast Asia, aim the discount limits at the specific categories that are losing money rather than the whole region, and check local demand before restocking them.
 
-**2. Heavy discounting is the factor most strongly linked to the losses.**
-The three loss making regions carry the highest average discounts (16 to 27 percent), while the healthiest region, Canada, discounts nothing and holds the strongest margin. Across all 13 regions, deeper discounts line up with worse margins.
-*Recommendation: cap discounts in the affected regions for one quarter and measure whether margins recover before making it permanent.*
+## How I worked through it
 
-**3. Shipping is not the cause, which sharpens where to act.**
-Both shipping cost and shipping delay were tested, and neither aligns with the losses. Africa and EMEA in fact have the lowest shipping costs in the company yet still lose money. This rules out shipping and points the focus directly at discounting.
+1. Cleaned and checked the data first. The dates came in as text and would not calculate, so I confirmed that and rebuilt them into real dates before doing any date maths. I built profit margin (Profit divided by Sales) and shipping delay (Ship Date minus Order Date) as new columns, and checked for duplicate rows.
+2. Mapped targets onto the data. I built a small reference table giving each region a margin target and used XLOOKUP to pull those onto every row, so I could judge each region against a goal instead of just looking at raw numbers.
+3. Tested the idea with PivotTables. I compared profit, sales, margin, and discount across the regions to find where the losses were and to see whether discounting explained them.
+4. Tried to prove myself wrong. I tested shipping cost and shipping delay against the weak regions to see if shipping, not discounting, was the driver. It was not, and ruling it out is part of why I trust the finding.
+5. Went down to product level. I broke the problem regions down by category, and checked the most extreme result against how many sales it was based on before treating it as a real finding.
 
-**4. In Southeast Asia, the damage is surgical, not region wide.**
-Unlike Africa and EMEA, where every category is unhealthy, Southeast Asia is mostly profitable apart from a few heavily discounted categories (Tables, Accessories, Supplies, Fasteners) that drag the whole region negative.
-*Recommendation: target discount limits at these specific categories rather than the entire region, and confirm local demand before restocking.*
+## Data dictionary (key fields)
 
----
-
-## Approach
-
-1. **Cleaned and validated the data.** Confirmed the dates were stored as text and converted them to real dates, then built two calculated fields: profit margin (Profit ÷ Sales) and shipping delay (Ship Date − Order Date). Checked for duplicate rows across all columns (none found).
-2. **Mapped targets onto the data.** Built a small reference table assigning each region a profit margin target, then used XLOOKUP to pull those targets onto every row so actual margins could be judged against a goal.
-3. **Tested the hypothesis with PivotTables.** Compared total profit, sales, average margin, and average discount across regions to locate the losses and test whether discounting explained them.
-4. **Ruled out alternatives.** Tested shipping delay and shipping cost against the weak regions to check whether shipping, rather than discounting, drove the losses. It did not.
-5. **Drilled into products.** Broke the problem regions down by sub-category to find where the losses concentrate, and confirmed the most extreme finding against its sales volume before reporting it.
-
----
-
-## Data dictionary (key fields used)
-
-| Field | Description |
+| Field | What it is |
 |---|---|
-| Order ID | Unique identifier for each order. One order can span several rows (one row per product line). |
-| Order Date / Ship Date | When the order was placed and shipped; used to calculate shipping delay. |
+| Order ID | Identifies each order. One order can appear across several rows, one per product. |
+| Order Date / Ship Date | When the order was placed and shipped. Used to work out shipping delay. |
 | Sales | Revenue for the line. Misleading on its own, since high sales can still lose money. |
-| Profit | Financial gain or loss on the line. Can be negative. |
-| Discount | Price reduction applied. The factor most strongly linked to the losses. |
-| Category / Sub-Category | Product groupings used to locate which products drive losses. |
-| Region | Broad geographic area (13 in total); the main dimension of this analysis. |
-| Shipping Cost | Cost to ship the order; tested as an alternative explanation and ruled out. |
+| Profit | Gain or loss on the line. Can be negative. |
+| Discount | Price reduction applied. The factor most closely tied to the losses. |
+| Category / Sub-Category | Product groupings, used to find which products were losing money. |
+| Region | Broad geographic area, 13 in total. The main focus of this analysis. |
+| Shipping Cost | Cost to ship the order. Tested as an alternative cause and ruled out. |
 
-*Calculated fields added during analysis: Profit Margin (Profit ÷ Sales), Shipping Delay (Ship Date − Order Date), and Target Margin / Manager (mapped from a reference table via XLOOKUP).*
+Fields I added during the analysis: Profit Margin, Shipping Delay, and a Target Margin pulled from the reference table with XLOOKUP.
 
----
+## What I would want you to know about the limits
 
-## Scope and limitations
+I think being clear about what this analysis can and cannot say is part of doing it properly, so:
 
-- **Correlation, not proven causation.** Discounting is the factor most strongly associated with the losses, but only a limited set of explanations was tested. Discount and losses move together; discount is not claimed as the sole or definitive cause.
-- **Short time window.** The data spans only four years (2011 to 2014), too short to confirm whether regional profitability is genuinely improving or declining. The flat overall trend is suggestive, not conclusive.
-- **No visibility into external factors.** The dataset holds no information on regional economies, customer behavior, or pricing strategy, so explanations such as local economic conditions or deliberate loss leaders cannot be tested and are not claimed.
-- **Assumed targets.** The regional profit margin targets used were reasonable assumptions set for practice, not actual company figures. Any judgment of a region hitting or missing target depends on those assumptions.
-- **Averages can hide variation.** Regional and category figures are averages; the Tables result in Southeast Asia rests on only 59 sales, so its precise figure is less reliable than higher volume categories, though the direction is clear.
-- **Analysis level.** The discount to loss relationship was confirmed on regional and category averages, not verified sale by sale.
+- It shows discounting is closely associated with the losses, not that discounting is the proven single cause. I only tested a limited set of explanations.
+- The data covers four years, which is too short to say for certain whether things are getting better or worse over time.
+- The dataset has nothing on regional economies, customer behaviour, or pricing strategy, so I can't test those and I don't claim them.
+- The margin targets I used were reasonable assumptions I set for this exercise, not real company figures.
+- Some numbers are averages that can hide variation. The most extreme result, Tables in Southeast Asia, is based on only 59 sales, so the direction is clear but the exact figure is shakier than the others.
 
----
+## What I took from it
 
-## Skills applied
-
-Data cleaning and validation • Calculated fields • XLOOKUP and data mapping • PivotTables • Filtering and sorting • Hypothesis testing and ruling out alternatives • Translating analysis into business recommendations • Communicating findings honestly with stated limitations
+The most useful thing here was not a feature of Excel. It was learning to test my own conclusion before trusting it, and to look twice at a dramatic number before leaning on it. The striking finding is not always the whole story, and an honest analysis is worth more than an impressive sounding one.
